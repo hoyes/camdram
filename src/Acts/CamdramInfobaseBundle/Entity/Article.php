@@ -4,6 +4,7 @@ namespace Acts\CamdramInfobaseBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Acts\CamdramBundle\Search\SearchableInterface;
 
 /**
  * Article
@@ -12,7 +13,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Entity(repositoryClass="Acts\CamdramInfobaseBundle\Entity\ArticleRepository")
  * @Gedmo\Loggable(logEntryClass="ArticleRevision")
  */
-class Article
+class Article implements SearchableInterface
 {
     /**
      * @var int
@@ -335,5 +336,32 @@ class Article
     public function getTags()
     {
         return $this->tags;
+    }
+
+    //Methods to make articles searchable
+
+    public function getShortName()
+    {
+        return '';
+    }
+
+    public function getDescription()
+    {
+        return $this->getBody();
+    }
+
+    public function getRank()
+    {
+        return $this->getIndexDate();
+    }
+
+    public function getIndexDate()
+    {
+        return $this->getUpdatedAt()->format('u');
+    }
+
+    public function getEntityType()
+    {
+        return 'article';
     }
 }

@@ -149,8 +149,9 @@ Camdram.autocomplete.displayResults = function(query, items) {
             }
 
             // Add in the text
+            var params = (result.entity_type == 'article') ? {slug: result.slug} : {identifier: result.slug}
             var link = $("<a/>")
-                .attr('href', Routing.generate('get_'+result.entity_type, {identifier: result.slug}))
+                .attr('href', Routing.generate('get_'+result.entity_type, params))
                 .addClass('resultText')
                 .appendTo(item)
                 .click(function(e) {
@@ -163,7 +164,9 @@ Camdram.autocomplete.displayResults = function(query, items) {
                 case 'show' : var icon_class = "fa fa-ticket"; break;
                 case 'venue' : var icon_class = "fa fa-building"; break;
                 case 'society' : var icon_class = "fa fa-briefcase"; break;
-                default: var icon_class = 'fa fa-user';
+                case 'article' : var icon_class = "fa fa-file-text-o"; break;
+                case 'person' : var icon_class = 'fa fa-user'; break;
+                default: var icon_class = '';
             }
             $("<i/>").addClass(icon_class).appendTo(link);
 
