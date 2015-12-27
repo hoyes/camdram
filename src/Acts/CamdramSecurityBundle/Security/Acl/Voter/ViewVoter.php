@@ -8,6 +8,7 @@ use Acts\CamdramBundle\Entity\Show;
 use Acts\CamdramBundle\Entity\Society;
 use Acts\CamdramBundle\Entity\Venue;
 use Acts\CamdramBundle\Entity\Person;
+use Acts\CamdramInfobaseBundle\Entity\Article;
 
 class ViewVoter extends Voter
 {
@@ -18,6 +19,7 @@ class ViewVoter extends Voter
                   || $subject instanceof Venue
                   || $subject instanceof Society
                   || $subject instanceof Person
+                  || $subject instanceof Article
                );
     }
 
