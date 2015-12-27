@@ -12,14 +12,34 @@
 
         <h2>{{ article.name }}</h2>
 
-        {{ article.body | camdram_markdown }}
-
-        <h4>Tags:<h4/>
         <p>
         {% for tag in article.tags %}
-        <span class="round label"><a href="{{ path("get_tag", {slug: tag.slug}) }}">{{ tag.name }}</a></span>
+        <span class="round label">
+            <a href="{{ path("get_tag", {slug: tag.slug}) }}">{{ tag.name }}</a>
+        </span>
         {% endfor %}
         </p>
+
+        <p>
+            <ul class="inline-list right">
+                {{ include('@ActsCamdram/Navigation/nav-item.html.twig',
+                    {item: {id: 'edit_article', path: path('edit_article',{slug:article.slug}), icon: 'pencil', text: 'Edit Article'} }) }}
+            </ul>
+            <em>Last edited by
+            {% if article.updatedBy.person %}
+                <a href="{{ path('get_person', {identifier: article.updatedBy.person.slug})}}">
+                {{ article.updatedBy.name }}
+                </a>
+            {% else %}
+                {{ article.updatedBy.name }}
+            {% endif %}
+            on {{ article.updatedAt | date('d/m/y \a\t H:i:s') }}</em>
+        </p>
+
+        <div class="panel">
+        {{ article.body | camdram_markdown }}
+        </div>
+
     </div>
 </div>
 {% endblock %}

@@ -4,7 +4,9 @@ namespace Acts\CamdramInfobaseBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+
 use Acts\CamdramBundle\Search\SearchableInterface;
+use Acts\CamdramSecurityBundle\Entity\User;
 
 /**
  * Article
@@ -60,7 +62,6 @@ class Article implements SearchableInterface
      * @var \DateTime
      *
      * @ORM\Column(name="updated_at", type="datetime")
-     * @Gedmo\Versioned
      * @Gedmo\Timestampable(on="update")
      */
     private $updatedAt;
@@ -68,15 +69,14 @@ class Article implements SearchableInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="created_by", type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Acts\CamdramSecurityBundle\Entity\User")
      */
     private $createdBy;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="updated_by", type="integer", nullable=true)
-     * @Gedmo\Versioned
+     * @ORM\ManyToOne(targetEntity="Acts\CamdramSecurityBundle\Entity\User")
      */
     private $updatedBy;
 
@@ -228,7 +228,7 @@ class Article implements SearchableInterface
     /**
      * Set createdBy
      *
-     * @param integer $createdBy
+     * @param User|null $createdBy
      *
      * @return Article
      */
@@ -242,7 +242,7 @@ class Article implements SearchableInterface
     /**
      * Get createdBy
      *
-     * @return integer
+     * @return User|null
      */
     public function getCreatedBy()
     {
@@ -252,7 +252,7 @@ class Article implements SearchableInterface
     /**
      * Set updatedBy
      *
-     * @param integer $updatedBy
+     * @param User|null $updatedBy
      *
      * @return Article
      */
@@ -266,7 +266,7 @@ class Article implements SearchableInterface
     /**
      * Get updatedBy
      *
-     * @return integer
+     * @return User|null
      */
     public function getUpdatedBy()
     {

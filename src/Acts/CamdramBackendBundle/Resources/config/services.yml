@@ -20,3 +20,6 @@ services:
     acts_camdram_backend.test.session_storage:
         class: Acts\CamdramBackendBundle\Test\SessionStorage
         parent: session.storage.mock_file
+
+    acts_camdram_backend.listener.timestampable:
+        alias: stof_doctrine_extensions.listener.timestampable
