@@ -1,0 +1,5 @@
+<ul class="side-nav">
+{% for tag in tags %}
+<li><a href="{{ path("get_tag", {slug: tag.tag.slug})}}">{{ tag.tag.name }} ({{tag.num_articles}})</a></li>
+{% endfor %}
+</ul>

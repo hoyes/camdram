@@ -1,0 +1,25 @@
+{% extends 'ActsCamdramBundle::layout.html.twig' %}
+
+{% set current_navigation_id = 'infobase' %}
+{% block title %}{{ article.name }} - Infobase{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="large-4 columns">
+        {{ render(controller('ActsCamdramInfobaseBundle:Article:sideBar')) }}
+    </div>
+    <div class="large-8 columns">
+
+        <h2>{{ article.name }}</h2>
+
+        {{ article.body | camdram_markdown }}
+
+        <h4>Tags:<h4/>
+        <p>
+        {% for tag in article.tags %}
+        <span class="round label"><a href="{{ path("get_tag", {slug: tag.slug}) }}">{{ tag.name }}</a></span>
+        {% endfor %}
+        </p>
+    </div>
+</div>
+{% endblock %}

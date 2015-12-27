@@ -1,0 +1,23 @@
+{% extends 'ActsCamdramBundle::layout.html.twig' %}
+
+{% set current_navigation_id = 'infobase' %}
+{% block title %}Infobase{% endblock %}
+
+{% block body %}
+<h2>Infobase</h2>
+
+<div class="row">
+    <div class="large-4 columns">
+        {{ render(controller('ActsCamdramInfobaseBundle:Article:sideBar')) }}
+    </div>
+    <div class="large-8 columns">
+
+        {% for article in articles %}
+        <div class="panel">
+        <h3><a href="{{ path("get_article", {slug: article.slug})}}">{{ article.name }}</a></h3>
+
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

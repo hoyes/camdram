@@ -3,13 +3,14 @@
 namespace Acts\CamdramLegacyBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Page
  *
  * The page table is deprecated in Camdram 2.0, as page information is stored
  * using the PHPCR. This class only defines 'getters' as a consequence.
- 
+
  * @ORM\Table(name="acts_pages")
  * @ORM\Entity(repositoryClass="Acts\CamdramLegacyBundle\Entity\PageRepository")
  */
@@ -184,6 +185,13 @@ class Page
      * @ORM\Column(name="searchable", type="boolean", nullable=false)
      */
     private $searchable;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="KnowledgeBaseRevision", mappedBy="page")
+     */
+    private $revisions;
 
     /**
      * Get id
@@ -745,5 +753,46 @@ class Page
         $this->searchable = $searchable;
 
         return $this;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->revisions = new ArrayCollection();
+    }
+
+    /**
+     * Add revision
+     *
+     * @param \Acts\CamdramLegacyBundle\Entity\KnowledgeBaseRevision $revision
+     *
+     * @return Page
+     */
+    public function addRevision(KnowledgeBaseRevision $revision)
+    {
+        $this->revisions[] = $revision;
+
+        return $this;
+    }
+
+    /**
+     * Remove revision
+     *
+     * @param \Acts\CamdramLegacyBundle\Entity\KnowledgeBaseRevision $revision
+     */
+    public function removeRevision(KnowledgeBaseRevision $revision)
+    {
+        $this->revisions->removeElement($revision);
+    }
+
+    /**
+     * Get revisions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getRevisions()
+    {
+        return $this->revisions;
     }
 }

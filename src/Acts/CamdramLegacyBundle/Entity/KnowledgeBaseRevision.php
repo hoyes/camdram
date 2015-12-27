@@ -31,7 +31,7 @@ class KnowledgeBaseRevision
     /**
      * @var \Page
      *
-     * @ORM\ManyToOne(targetEntity="Page")
+     * @ORM\ManyToOne(targetEntity="Page", inversedBy="revisions")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="pageid", referencedColumnName="id")
      * })
