@@ -1,6 +1,6 @@
 acts_camdram_infobase:
     resource: "@ActsCamdramInfobaseBundle/Resources/config/routing.yml"
-    prefix:   /infobase-new
+    prefix:   /infobase
 
 acts_camdram_admin:
     resource: "@ActsCamdramAdminBundle/Resources/config/routing.yml"
