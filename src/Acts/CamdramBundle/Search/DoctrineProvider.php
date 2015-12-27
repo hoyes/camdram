@@ -28,7 +28,15 @@ class DoctrineProvider implements ProviderInterface
         /* @var $repo \Doctrine\ORM\EntityRepository */
         $results = array();
         foreach ($indexes as $index) {
-            $repo = $this->entityManager->getRepository('ActsCamdramBundle:'.ucfirst($index));
+            if ($index == 'user') {
+                $namespace = 'ActsCamdramSecurityBundle:';
+            } else if ($index == 'article') {
+                $namespace = 'ActsCamdramInfobaseBundle:';
+            } else {
+                $namespace = 'ActsCamdramBundle:';
+            }
+
+            $repo = $this->entityManager->getRepository($namespace.ucfirst($index));
 
             $query = $repo->createQueryBuilder('e')
                 ->where('e.name LIKE :input')
@@ -49,6 +57,8 @@ class DoctrineProvider implements ProviderInterface
         foreach ($indexes as $index) {
             if ($index == 'user') {
                 $namespace = 'ActsCamdramSecurityBundle:';
+            } else if ($index == 'article') {
+                $namespace = 'ActsCamdramInfobaseBundle:';
             } else {
                 $namespace = 'ActsCamdramBundle:';
             }
@@ -59,7 +69,7 @@ class DoctrineProvider implements ProviderInterface
             $qb = $repo->createQueryBuilder('e')
                 ->where('e.name LIKE :input')
                 ->setParameter(':input', '%'.$q.'%');
-            if ($index != 'user') {
+            if ($index != 'user' && $index != 'article') {
                 $qb->orWhere('e.description LIKE :input');
             }
             foreach ($qb->getQuery()->getResult() as $result) {
