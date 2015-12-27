@@ -1,0 +1,7 @@
+acts_camdram_infobase_article:
+    type:     rest
+    resource: ActsCamdramInfobaseBundle:Article
+
+acts_camdram_infobase_tag:
+    type:     rest
+    resource: ActsCamdramInfobaseBundle:Tag

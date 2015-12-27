@@ -1,0 +1,4 @@
+services:
+#    acts_camdram_infobase.example:
+#        class: Acts\CamdramInfobaseBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
