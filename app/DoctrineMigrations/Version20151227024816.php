@@ -25,6 +25,13 @@ class Version20151227024816 extends AbstractMigration
         $this->addSql('ALTER TABLE acts_infobase_article_tag_links ADD CONSTRAINT FK_86FE49667294869C FOREIGN KEY (article_id) REFERENCES acts_infobase_articles (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE acts_infobase_article_tag_links ADD CONSTRAINT FK_86FE4966475DFD9C FOREIGN KEY (articletag_id) REFERENCES acts_infobase_article_tags (id) ON DELETE CASCADE');
         $this->addSql('CREATE TABLE acts_infobase_article_revisions (id INT AUTO_INCREMENT NOT NULL, action VARCHAR(8) NOT NULL, logged_at DATETIME NOT NULL, object_id VARCHAR(64) DEFAULT NULL, object_class VARCHAR(255) NOT NULL, version INT NOT NULL, data LONGTEXT DEFAULT NULL COMMENT \'(DC2Type:array)\', username VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB');
+        $this->addSql('ALTER TABLE acts_support ADD CONSTRAINT FK_A6F619725B919408 FOREIGN KEY (supportid) REFERENCES acts_support (id)');
+        $this->addSql('ALTER TABLE acts_infobase_articles ADD createdBy_id INT DEFAULT NULL, ADD updatedBy_id INT DEFAULT NULL, DROP created_by, DROP updated_by');
+        $this->addSql('ALTER TABLE acts_infobase_articles ADD CONSTRAINT FK_965E47233174800F FOREIGN KEY (createdBy_id) REFERENCES acts_users (id)');
+        $this->addSql('ALTER TABLE acts_infobase_articles ADD CONSTRAINT FK_965E472365FF1AEC FOREIGN KEY (updatedBy_id) REFERENCES acts_users (id)');
+        $this->addSql('CREATE INDEX IDX_965E47233174800F ON acts_infobase_articles (createdBy_id)');
+        $this->addSql('CREATE INDEX IDX_965E472365FF1AEC ON acts_infobase_articles (updatedBy_id)');
+
     }
 
     /**

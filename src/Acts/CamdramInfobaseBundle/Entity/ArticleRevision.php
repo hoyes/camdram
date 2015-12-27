@@ -13,5 +13,25 @@ use Gedmo\Loggable\Entity\MappedSuperclass\AbstractLogEntry;
  */
 class ArticleRevision extends AbstractLogEntry
 {
-    
+    /**
+     * @var string $objectId
+     * This definition change the DB type in the super-class of 'string' to 'integer'
+     *
+     * @ORM\Column(name="object_id", type="integer", nullable=true)
+     */
+    protected $objectId;
+
+    /**
+     * Set loggedAt to "now"
+     */
+    public function setLoggedAt(\DateTime $loggedAt = null)
+    {
+        if (!$loggedAt) {
+            $this->loggedAt = new \DateTime();
+        }
+        else {
+            $this->loggedAt = $loggedAt;
+        }
+    }
+
 }
