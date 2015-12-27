@@ -22,6 +22,7 @@
                 <a href="{%- if entity.entity_type == 'person' %}{{ path('get_person', {identifier: entity.slug}) }}
     {%- elseif entity.entity_type == 'society' %}{{ path('get_society', {identifier: entity.slug}) }}
     {%- elseif entity.entity_type == 'venue' %}{{ path('get_venue', {identifier: entity.slug}) }}
+    {%- elseif entity.entity_type == 'article' %}{{ path('get_article', {slug: entity.slug}) }}
     {%- endif %}">{{ entity.name }}</a>
 
             </h5>
