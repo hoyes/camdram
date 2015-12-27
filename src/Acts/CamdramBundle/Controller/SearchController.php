@@ -25,7 +25,7 @@ class SearchController extends FOSRestController
 
         $limit = $request->get('limit', 10);
 
-        $data = $search_provider->executeAutocomplete(array('show', 'society', 'venue', 'person'),
+        $data = $search_provider->executeAutocomplete(array('show', 'society', 'venue', 'person', 'article'),
             $request->get('q'), $limit, array('rank' => 'DESC'));
 
         $view = $this->view($data, 200)
@@ -47,7 +47,7 @@ class SearchController extends FOSRestController
         $page = $request->get('page', 1);
         $offset = ($page - 1) * $limit;
 
-        $data = $search_provider->executeTextSearch(array('show', 'society', 'venue', 'person'),
+        $data = $search_provider->executeTextSearch(array('show', 'society', 'venue', 'person', 'article'),
             $request->get('q'), $offset, $limit, array('rank' => 'DESC'));
 
         $view = $this->view($data, 200)

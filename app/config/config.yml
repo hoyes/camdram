@@ -217,7 +217,7 @@ acts_sphinx_real_time:
                 dict: keywords
         person:
             fields: [name, short_name, description]
-            attributes: {name: string, description: string, entity_type: string, slug: string, rank: int, index_date: datetime, num_shows: int}
+            attributes: {name: string, description: string, entity_type: string, slug: string} #rank: int, index_date: datetime, num_shows: int
             persistence:
                 driver: orm
                 model: Acts\CamdramBundle\Entity\Person
@@ -225,6 +225,19 @@ acts_sphinx_real_time:
                 finder: ~
                 listener:
                     is_indexable_callback: isIndexable
+            config:
+                min_prefix_len: 1
+                prefix_fields: [name]
+                enable_star: true
+                dict: keywords
+        article:
+            fields: [name, short_name, description]
+            attributes: {name: string, description: string, entity_type: string, slug: string, rank: int, index_date: datetime}
+            persistence:
+                driver: orm
+                model: Acts\CamdramInfobaseBundle\Entity\Article
+                provider: ~
+                finder: ~
             config:
                 min_prefix_len: 1
                 prefix_fields: [name]
