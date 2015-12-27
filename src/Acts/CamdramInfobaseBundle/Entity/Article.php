@@ -8,7 +8,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * Article
  *
- * @ORM\Table(name="acts_infobase_article")
+ * @ORM\Table(name="acts_infobase_articles")
  * @ORM\Entity(repositoryClass="Acts\CamdramInfobaseBundle\Entity\ArticleRepository")
  * @Gedmo\Loggable(logEntryClass="ArticleRevision")
  */
@@ -82,7 +82,7 @@ class Article
     /**
      * @var string
      *
-     * @ORM\Column(name="legacy_slug", type="string", length=255, unique=true)
+     * @ORM\Column(name="legacy_slug", type="string", length=255, unique=true, nullable=true)
      */
     private $legacySlug;
 

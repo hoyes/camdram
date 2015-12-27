@@ -1,0 +1,23 @@
+{% extends 'ActsCamdramBundle::layout.html.twig' %}
+
+{% set current_navigation_id = 'infobase' %}
+{% block title %}New Article - Infobase{% endblock %}
+
+{% block body %}
+<h2>Infobase</h2>
+
+<div class="row">
+    <div class="large-12 columns">
+        <h3>New Article</h3>
+
+        <form action="{{ path('post_article') }}" method="post">
+            {{ include('ActsCamdramInfobaseBundle:Article:form.html.twig') }}
+
+            <div class="text-right">
+                <input type="submit" value="Create" class="button"/>
+            </div>
+        </form>
+
+    </div>
+</div>
+{% endblock %}
