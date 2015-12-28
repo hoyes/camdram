@@ -28,4 +28,23 @@ class ArticleRepository extends \Doctrine\ORM\EntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findRelated(Article $article, $limit)
+    {
+        $query = $this->createQueryBuilder('a')
+            ->innerJoin('a.tags', 't')
+            ->innerJoin('t.articles', 'b')
+            ->groupBy('a')
+            ->select('a AS article')
+            ->addSelect('COUNT(a) as num')
+            ->where('b = :article')
+            ->andWhere('a != :article')
+            ->setParameter('article', $article)
+            ->orderBy('num', 'DESC')
+            ->addOrderBy('a.name')
+            ->setMaxResults($limit)
+            ->getQuery();
+
+        return $query->getResult();
+    }
 }

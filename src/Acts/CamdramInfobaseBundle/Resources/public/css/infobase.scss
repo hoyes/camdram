@@ -1,3 +1,8 @@
+$include-html-classes: false;
+@import "foundation/variables";
+@import "foundation/components/global";
+@import "foundation/components/labels";
+
 .tag-cloud {
     text-align:center;
     line-height:inherit;
@@ -15,5 +20,16 @@
     .infobase-date {
         margin:0.8em 0 0 0;
         font-style:italic;
+    }
+}
+
+.inline-list-label {
+    padding:0.2em;
+    font-weight:bold;
+}
+
+a:link, a:visited {
+    &.tag-bubble {
+        @include label(0.5em, 1em, #fe4a06, 0.5em);
     }
 }

@@ -1,6 +1,32 @@
-<ul class="side-nav">
+{% if related_articles %}
+<h5>Related Articles:</h5>
+<ul>
+    {% for article in related_articles %}
+    <li><a href="{{ path("get_article", {slug: article.article.slug})}}">
+        {{ article.article.name }}
+    </a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% if related_tags %}
+<h5>Related Tags:</h5>
+<ul>
+    {% for tag in related_tags %}
+    <li><a href="{{ path("get_tag", {slug: tag.tag.slug})}}">
+        {{ tag.tag.name }} ({{tag.num}})
+    </a></li>
+    {% endfor %}
+</ul>
+<h5>More Tags:</h5>
+{% else %}
 <h5>Tags:</h5>
-{% for tag in tags %}
-<li><a href="{{ path("get_tag", {slug: tag.tag.slug})}}">{{ tag.tag.name }} ({{tag.num_articles}})</a></li>
+{% endif %}
+
+<ul>
+{% for tag in more_tags %}
+<li><a href="{{ path("get_tag", {slug: tag.tag.slug})}}">
+    {{ tag.tag.name }} ({{tag.num_articles}})
+</a></li>
 {% endfor %}
 </ul>

@@ -27,4 +27,26 @@ class DefaultController extends Controller
         ]);
     }
 
+    public function sideBarAction($tag = null, $article = null)
+    {
+        $article_repo = $this->getDoctrine()->getRepository('ActsCamdramInfobaseBundle:Article');
+        $tag_repo = $this->getDoctrine()->getRepository('ActsCamdramInfobaseBundle:ArticleTag');
+
+        $related_tags = [];
+        if ($tag) {
+            $related_tags = $tag_repo->findRelated($tag, 5);
+        }
+        $related_articles = [];
+        if ($article) {
+            $related_articles = $article_repo->findRelated($article, 20);
+        }
+
+        return $this->render('ActsCamdramInfobaseBundle:Article:side-bar.html.twig', [
+            'related_articles' => $related_articles,
+            'related_tags' => $related_tags,
+            'more_tags' => $tag_repo->findWithCountSortedByCount(),
+        ]);
+    }
+
+
 }
