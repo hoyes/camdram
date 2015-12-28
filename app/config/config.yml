@@ -33,7 +33,7 @@ twig:
 assetic:
     debug:          "%kernel.debug%"
     use_controller: false
-    bundles:        [ ActsCamdramBundle ]
+    bundles:        [ ActsCamdramBundle, ActsCamdramInfobaseBundle ]
     filters:
         cssrewrite:
             apply_to: '\.css$'

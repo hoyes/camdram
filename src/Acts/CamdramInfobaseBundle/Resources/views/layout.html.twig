@@ -2,6 +2,14 @@
 
 {% set current_navigation_id = 'infobase' %}
 
+{% block stylesheets %}
+{% stylesheets output='css/main.css'
+'bundles/actscamdraminfobase/css/*.scss'
+%}
+<link rel="stylesheet" href="{{ asset_url }}" />
+{% endstylesheets %}
+{% endblock %}
+
 {% block body %}
 <div class="row">
     <div class="large-3 columns">

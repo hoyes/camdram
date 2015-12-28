@@ -1,0 +1,19 @@
+.tag-cloud {
+    text-align:center;
+    line-height:inherit;
+
+    a {
+        display:inline-block;
+        padding:5px 3px;
+        vertical-align:middle;
+    }
+}
+
+.infobase-home-panel {
+    border-top: 1px solid #ddd;
+
+    .infobase-date {
+        margin:0.8em 0 0 0;
+        font-style:italic;
+    }
+}
