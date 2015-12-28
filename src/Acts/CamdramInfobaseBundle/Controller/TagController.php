@@ -6,6 +6,10 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 
 /**
+ * TagController
+ *
+ * REST controller for reading ArticleTag objects
+ *
  * @Rest\RouteResource("tag")
  */
 class TagController extends FOSRestController

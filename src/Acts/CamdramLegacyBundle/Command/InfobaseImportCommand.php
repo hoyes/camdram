@@ -16,7 +16,7 @@ use Acts\CamdramInfobaseBundle\Entity\ArticleRevision;
  */
 class InfobaseImportCommand extends ContainerAwareCommand
 {
-    const INFOBASE_BASE_ID = 119;
+    const INFOBASE_BASE_PAGE_ID = 119;
 
     /**
      * @inheritdoc
@@ -33,25 +33,43 @@ class InfobaseImportCommand extends ContainerAwareCommand
     {
         $this->getContainer()->get('acts_camdram_backend.listener.timestampable')->disable();
 
+        //First delete all existing infobase data (after getting confirmation)
         $helper = $this->getHelper('question');
         $question = new ConfirmationQuestion('This will truncate all infobase tables - continue? ', false);
         if (!$helper->ask($input, $output, $question)) {
             return;
         }
-        $connection = $this->getContainer()->get('doctrine.orm.entity_manager')->getConnection();
-        $connection->query('SET FOREIGN_KEY_CHECKS=0');
-        $platform   = $connection->getDatabasePlatform();
-        $connection->executeUpdate($platform->getTruncateTableSQL('acts_infobase_articles', true));
-        $connection->executeUpdate($platform->getTruncateTableSQL('acts_infobase_article_tags', true));
-        $connection->executeUpdate($platform->getTruncateTableSQL('acts_infobase_article_tag_links', true));
-        $connection->executeUpdate($platform->getTruncateTableSQL('acts_infobase_article_revisions', true));
+        $this->truncateTable('acts_infobase_articles');
+        $this->truncateTable('acts_infobase_article_tags');
+        $this->truncateTable('acts_infobase_article_tag_links');
+        $this->truncateTable('acts_infobase_article_revisions');
+
+        /*
+         * Two recursive passes of the pages table are done. The first creates
+         * the articles themselves, then the second creates all the revisions
+         */
         //Import articles
         $this->importPages(self::INFOBASE_BASE_ID, $output, "");
 
-        //Truncate the revisions auto-created above and rewrite the history according to the v1 revisions
-        $connection->executeUpdate($platform->getTruncateTableSQL('acts_infobase_article_revisions', true));
-        $this->importRevisions(self::INFOBASE_BASE_ID, $output);
+        /* This isn't very nice but I can't think of a better way of doing it
+         * and this code can eventually be deleted anyway
+         *
+         * When the pages are imported above, the Loggable Doctrine extension will
+         * have automatically created a single revision based on current date
+         * Here, we truncate these revisions, then manually rewrite the
+         * revision history according to the v1 revisions
+         */
+        $this->truncateTable('acts_infobase_article_revisions');
+        //Import the articles' revisions
+        $this->importRevisions(self::INFOBASE_BASE_PAGE_ID, $output);
+    }
 
+    private truncateTable($name)
+    {
+        $connection = $this->getContainer()->get('doctrine.orm.entity_manager')->getConnection();
+        $connection->query('SET FOREIGN_KEY_CHECKS=0');
+        $platform   = $connection->getDatabasePlatform();
+        $connection->executeUpdate($platform->getTruncateTableSQL($name, true));
         $connection->query('SET FOREIGN_KEY_CHECKS=1');
     }
 

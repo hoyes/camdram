@@ -31,17 +31,17 @@ class ArticleRepository extends \Doctrine\ORM\EntityRepository
 
     public function findRelated(Article $article, $limit)
     {
-        $query = $this->createQueryBuilder('a')
-            ->innerJoin('a.tags', 't')
-            ->innerJoin('t.articles', 'b')
-            ->groupBy('a')
-            ->select('a AS article')
-            ->addSelect('COUNT(a) as num')
-            ->where('b = :article')
-            ->andWhere('a != :article')
+        $query = $this->createQueryBuilder('related_article')
+            ->innerJoin('related_article.tags', 'tags')
+            ->innerJoin('tags.articles', 'this_article')
+            ->groupBy('related_article')
+            ->select('related_article AS article')
+            ->addSelect('COUNT(related_article) as num')
+            ->where('this_article = :article')
+            ->andWhere('related_article != :article')
             ->setParameter('article', $article)
             ->orderBy('num', 'DESC')
-            ->addOrderBy('a.name')
+            ->addOrderBy('related_article.name')
             ->setMaxResults($limit)
             ->getQuery();
 
