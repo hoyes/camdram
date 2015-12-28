@@ -26,15 +26,6 @@ class ArticleController extends FOSRestController
             ;
     }
 
-    public function sideBarAction()
-    {
-        $repo = $this->getDoctrine()->getRepository('ActsCamdramInfobaseBundle:ArticleTag');
-
-        return $this->render('ActsCamdramInfobaseBundle:Article:side-bar.html.twig', [
-            'tags' => $repo->findWithCountSortedByCount()
-        ]);
-    }
-
     /**
      * @Rest\Get("articles/{slug}")
      * @Security("is_granted('VIEW', article)")

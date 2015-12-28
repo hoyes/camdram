@@ -14,7 +14,10 @@
 <div class="row">
     <div class="large-3 columns">
         <h2><a href="{{ path('acts_camdram_infobase_index') }}">Infobase</a></h2>
-        {{ render(controller('ActsCamdramInfobaseBundle:Article:sideBar')) }}
+        {{ render(controller('ActsCamdramInfobaseBundle:Default:sideBar', {
+            tag: tag is defined ? tag : null,
+            article: article is defined ? article : null,
+            })) }}
     </div>
     <div class="large-9 columns">
         {% block infobase_body %}{% endblock %}

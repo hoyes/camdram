@@ -40,4 +40,22 @@ class ArticleTagRepository extends \Doctrine\ORM\EntityRepository
 
         return $res;
     }
+
+    public function findRelated(ArticleTag $tag, $limit)
+    {
+        $query = $this->createQueryBuilder('t')
+            ->innerJoin('t.articles', 'a')
+            ->innerJoin('a.tags', 's')
+            ->groupBy('t')
+            ->select('t AS tag')
+            ->addSelect('COUNT(t) as num')
+            ->where('s = :tag')
+            ->andWhere('t != :tag')
+            ->setParameter('tag', $tag)
+            ->orderBy('num', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery();
+
+        return $query->getResult();
+    }
 }
