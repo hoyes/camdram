@@ -29,10 +29,10 @@ class ArticleController extends FOSRestController
     public function sideBarAction()
     {
         $repo = $this->getDoctrine()->getRepository('ActsCamdramInfobaseBundle:ArticleTag');
-        $tags = $repo->findSortedWithCount();
 
-        return $this->render('ActsCamdramInfobaseBundle:Article:side-bar.html.twig',
-            ['tags' => $tags]);
+        return $this->render('ActsCamdramInfobaseBundle:Article:side-bar.html.twig', [
+            'tags' => $repo->findWithCountSortedByCount()
+        ]);
     }
 
     /**

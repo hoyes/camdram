@@ -10,7 +10,7 @@ namespace Acts\CamdramInfobaseBundle\Entity;
  */
 class ArticleTagRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function findSortedWithCount()
+    public function findWithCountSortedByCount()
     {
         $query = $this->createQueryBuilder('t')
             ->innerJoin('t.articles', 'a')#
@@ -18,6 +18,22 @@ class ArticleTagRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect('COUNT(a) AS num_articles')
             ->groupBy('t')
             ->orderBy('num_articles', 'DESC')
+            ->getQuery();
+
+        $res = $query->getResult();
+
+        return $res;
+    }
+
+    public function findWithCountSortedByName($limit)
+    {
+        $query = $this->createQueryBuilder('t')
+            ->innerJoin('t.articles', 'a')#
+            ->select('t AS tag')
+            ->addSelect('COUNT(a) AS num_articles')
+            ->groupBy('t')
+            ->orderBy('t.name')
+            ->setMaxResults($limit)
             ->getQuery();
 
         $res = $query->getResult();

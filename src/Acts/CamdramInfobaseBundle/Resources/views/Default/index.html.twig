@@ -1,0 +1,45 @@
+{% extends 'ActsCamdramBundle::layout.html.twig' %}
+
+{% block title %}Infobase{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="large-12 columns">
+
+        <div class="right">
+            <a href="{{ path('new_article') }}" class="button">Write something new</a>
+        </div>
+
+        <h2>Infobase</h2>
+
+        <ul class="inline-list">
+        {% for tag in tags %}
+            <li style="font-size:{{ 70 + 10 * tag.num_articles }}%">
+                <a href="{{ path('get_tag', {slug: tag.tag.slug}) }}">
+            {{ tag.tag.name }}</a>
+            </li>
+        {% endfor %}
+        </ul>
+
+        <div class="row">
+            <div class="large-6 columns">
+                <h4>Recently Created</h4>
+                <ul>
+                {% for article in recently_created %}
+                    <li>{{ article.name }}</li>
+                {% endfor %}
+                </ul>
+            </div>
+            <div class="large-6 columns">
+                <h4>Recently Updated</h4>
+                <ul>
+                {% for article in recently_updated %}
+                    <li>{{ article.name }}</li>
+                {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
