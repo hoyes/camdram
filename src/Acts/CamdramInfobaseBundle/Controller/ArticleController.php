@@ -11,6 +11,10 @@ use Acts\CamdramInfobaseBundle\Form\Type\ArticleType;
 use Acts\CamdramInfobaseBundle\Entity\Article;
 
 /**
+ * ArticleController
+ *
+ * REST controller for reading/writing Article objects
+ *
  * @Rest\RouteResource("article")
  */
 class ArticleController extends FOSRestController

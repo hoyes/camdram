@@ -10,29 +10,20 @@ namespace Acts\CamdramInfobaseBundle\Entity;
  */
 class ArticleTagRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function findWithCountSortedByCount()
+    /**
+     * Returns an array of arrays like [[tag: {name: }, num: 7]],
+     * sorted by 'num' descending (i.e. the $limit most common tags)
+     *
+     * @param integer $limit The number of tags to return
+     */
+    public function findWithCountSortedByCount($limit)
     {
-        $query = $this->createQueryBuilder('t')
-            ->innerJoin('t.articles', 'a')#
-            ->select('t AS tag')
-            ->addSelect('COUNT(a) AS num_articles')
-            ->groupBy('t')
-            ->orderBy('num_articles', 'DESC')
-            ->getQuery();
-
-        $res = $query->getResult();
-
-        return $res;
-    }
-
-    public function findWithCountSortedByName($limit)
-    {
-        $query = $this->createQueryBuilder('t')
-            ->innerJoin('t.articles', 'a')#
-            ->select('t AS tag')
-            ->addSelect('COUNT(a) AS num_articles')
-            ->groupBy('t')
-            ->orderBy('t.name')
+        $query = $this->createQueryBuilder('_tag')
+            ->innerJoin('_tag.articles', 'articles')#
+            ->select('_tag AS tag')
+            ->addSelect('COUNT(articles) AS num')
+            ->groupBy('_tag')
+            ->orderBy('num', 'DESC')
             ->setMaxResults($limit)
             ->getQuery();
 
@@ -41,16 +32,48 @@ class ArticleTagRepository extends \Doctrine\ORM\EntityRepository
         return $res;
     }
 
+    /**
+     * Returns an array of arrays like [[tag: {name: }, num: 7]],
+     * sorted by the name (i.e. the $limit most common tags, but sorted by name)
+     *
+     * @param integer $limit The number of tags to return
+     */
+    public function findWithCountSortedByName($limit)
+    {
+        $query = $this->createQueryBuilder('_tag')
+            ->innerJoin('_tag.articles', 'articles')#
+            ->select('_tag AS tag')
+            ->addSelect('COUNT(articles) AS num')
+            ->groupBy('_tag')
+            ->orderBy('_tag.name')
+            ->setMaxResults($limit)
+            ->getQuery();
+
+        $res = $query->getResult();
+
+        return $res;
+    }
+
+    /**
+     * Returns an array of tags 'related' to the tag supplied. Here, 'Related'
+     * is interpreted here as meaning 'commonly used together with on other
+     * articles'
+     *
+     * @param ArticleTag $tag   The tags returned will be related to this tag
+     * @param integer $limit    The number of tags to return
+     */
     public function findRelated(ArticleTag $tag, $limit)
     {
-        $query = $this->createQueryBuilder('t')
-            ->innerJoin('t.articles', 'a')
-            ->innerJoin('a.tags', 's')
-            ->groupBy('t')
-            ->select('t AS tag')
-            ->addSelect('COUNT(t) as num')
-            ->where('s = :tag')
-            ->andWhere('t != :tag')
+        $query = $this->createQueryBuilder('related_tag')
+            ->innerJoin('related_tag.articles', 'articles')
+            ->innerJoin('articles.tags', 'this_tag')
+            ->groupBy('related_tag')
+            ->select('related_tag AS tag')
+            ->addSelect('COUNT(related_tag) as num')
+            ->where('this_tag = :tag')
+            /* Obviously the tag passed in is most related to itself, but
+               don't return this! */
+            ->andWhere('related_tag != :tag')
             ->setParameter('tag', $tag)
             ->orderBy('num', 'DESC')
             ->setMaxResults($limit)

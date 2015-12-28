@@ -8,8 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Page
  *
- * The page table is deprecated in Camdram 2.0, as page information is stored
- * using the PHPCR. This class only defines 'getters' as a consequence.
+ * The page table is deprecated in Camdram 2.0
 
  * @ORM\Table(name="acts_pages")
  * @ORM\Entity(repositoryClass="Acts\CamdramLegacyBundle\Entity\PageRepository")
