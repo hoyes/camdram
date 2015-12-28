@@ -1,6 +1,15 @@
 {% extends 'ActsCamdramBundle::layout.html.twig' %}
 
+{% set current_navigation_id = 'infobase' %}
 {% block title %}Infobase{% endblock %}
+
+{% block stylesheets %}
+{% stylesheets output='css/main.css'
+'bundles/actscamdraminfobase/css/*.scss'
+%}
+<link rel="stylesheet" href="{{ asset_url }}" />
+{% endstylesheets %}
+{% endblock %}
 
 {% block body %}
 <div class="row">
@@ -12,31 +21,54 @@
 
         <h2>Infobase</h2>
 
-        <ul class="inline-list">
+        <p class="tag-cloud">
         {% for tag in tags %}
-            <li style="font-size:{{ 70 + 10 * tag.num_articles }}%">
-                <a href="{{ path('get_tag', {slug: tag.tag.slug}) }}">
-            {{ tag.tag.name }}</a>
-            </li>
+            <a href="{{ path('get_tag', {slug: tag.tag.slug}) }}" style="font-size:{{ tag.cloud_weight }}%">
+                {{ tag.tag.name }}
+            </a>
         {% endfor %}
-        </ul>
+        </p>
 
         <div class="row">
             <div class="large-6 columns">
-                <h4>Recently Created</h4>
-                <ul>
+                <h4>New Pages</h4>
+
                 {% for article in recently_created %}
-                    <li>{{ article.name }}</li>
+                <div class="infobase-home-panel">
+                    <p class="infobase-date">
+                        {{ article.createdAt | date('j F Y \\a\\t H:i:s') }} by
+                        {% if article.createdBy.person %}
+                            <a href="{{ path('get_person', {identifier: article.createdBy.person.slug})}}">
+                                {{ article.createdBy.name }}
+                            </a>
+                        {% else %}
+                            {{ article.createdBy.name }}
+                        {% endif %}
+                    </p>
+                    <h5><a href="{{ path('get_article', {slug: article.slug})}}">{{ article.name }}</a></h5>
+                    <p>{{ article.body | strip_camdram_markdown | truncate(100) }}</p>
+                </div>
                 {% endfor %}
-                </ul>
+
             </div>
             <div class="large-6 columns">
                 <h4>Recently Updated</h4>
-                <ul>
                 {% for article in recently_updated %}
-                    <li>{{ article.name }}</li>
+                <div class="infobase-home-panel">
+                    <p class="infobase-date">
+                        {{ article.updatedAt | date('j F Y \\a\\t H:i:s') }} by
+                        {% if article.updatedBy.person %}
+                            <a href="{{ path('get_person', {identifier: article.updatedBy.person.slug})}}">
+                                {{ article.updatedBy.name }}
+                            </a>
+                        {% else %}
+                            {{ article.updatedBy.name }}
+                        {% endif %}
+                    </p>
+                    <h5><a href="{{ path('get_article', {slug: article.slug})}}">{{ article.name }}</a></h5>
+                    <p>{{ article.body | strip_camdram_markdown | truncate(100) }}</p>
+                </div>
                 {% endfor %}
-                </ul>
             </div>
         </div>
 
