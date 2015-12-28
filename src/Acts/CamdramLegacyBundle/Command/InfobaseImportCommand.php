@@ -49,7 +49,7 @@ class InfobaseImportCommand extends ContainerAwareCommand
          * the articles themselves, then the second creates all the revisions
          */
         //Import articles
-        $this->importPages(self::INFOBASE_BASE_ID, $output, "");
+        $this->importPages(self::INFOBASE_BASE_PAGE_ID, $output, "");
 
         /* This isn't very nice but I can't think of a better way of doing it
          * and this code can eventually be deleted anyway
@@ -64,7 +64,7 @@ class InfobaseImportCommand extends ContainerAwareCommand
         $this->importRevisions(self::INFOBASE_BASE_PAGE_ID, $output);
     }
 
-    private truncateTable($name)
+    private function truncateTable($name)
     {
         $connection = $this->getContainer()->get('doctrine.orm.entity_manager')->getConnection();
         $connection->query('SET FOREIGN_KEY_CHECKS=0');
