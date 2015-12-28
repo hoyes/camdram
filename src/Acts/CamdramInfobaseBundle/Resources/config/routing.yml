@@ -5,3 +5,7 @@ acts_camdram_infobase_article:
 acts_camdram_infobase_tag:
     type:     rest
     resource: ActsCamdramInfobaseBundle:Tag
+
+acts_camdram_infobase_index:
+    path: /
+    defaults: { _controller: ActsCamdramInfobaseBundle:Default:index }

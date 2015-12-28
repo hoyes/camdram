@@ -10,4 +10,22 @@ namespace Acts\CamdramInfobaseBundle\Entity;
  */
 class ArticleRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findRecentlyUpdated($limit)
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.createdAt != a.updatedAt')
+            ->orderBy('a.updatedAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findRecentlyCreated($limit)
+    {
+        return $this->createQueryBuilder('a')
+            ->orderBy('a.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
 }
