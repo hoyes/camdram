@@ -183,5 +183,26 @@ ivory_google_map:
         debug: "%kernel.debug%"
         api_key: "%google_key%"
 
+nelmio_api_doc:
+    documentation:
+        info:
+            title: Camdram
+            version: 1.0.0
+        securityDefinitions:
+            Bearer:
+                type: apiKey
+                description: 'Value: Bearer {jwt}'
+                name: Authorization
+                in: header
+        security:
+            - Bearer: []
+    areas:
+        path_patterns:
+            - ^/shows/
+            - ^/people/
+            - ^/venues/
+            - ^/societies/
+            - ^/account/
+
 parameters:
     router.request_context.host: www.camdram.net

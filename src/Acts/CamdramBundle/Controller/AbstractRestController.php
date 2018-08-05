@@ -290,30 +290,4 @@ abstract class AbstractRestController extends FOSRestController
 
         return $view;
     }
-
-    /**
-     * Action called by Camdram v1 which triggers creating fields only used by v1, e.g. the slug
-     *
-     * @param $id
-     *
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     */
-    public function upgradeAction($id)
-    {
-        $this->checkAuthenticated();
-        $entity = $this->getRepository()->findOneById($id);
-        if (!$entity) {
-            throw new NotFoundHttpException('Not found');
-        }
-
-        $em = $this->getDoctrine()->getManager();
-        $entity->setSlug('__id__');
-        $changeset = array();
-        $this->getDoctrine()->getManager()->getEventManager()->dispatchEvent('preUpdate', new PreUpdateEventArgs($entity, $this->getDoctrine()->getManager(), $changeset));
-        $em->flush();
-
-        $this->getDoctrine()->getManager()->getEventManager()->dispatchEvent('postUpdate', new LifecycleEventArgs($entity, $this->getDoctrine()->getManager()));
-
-        return $this->view(array('success' => true), 200);
-    }
 }

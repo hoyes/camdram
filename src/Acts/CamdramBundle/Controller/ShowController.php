@@ -8,6 +8,8 @@ use Acts\CamdramBundle\Entity\Performance;
 use Acts\CamdramBundle\Form\Type\ShowType;
 use Acts\CamdramSecurityBundle\Entity\PendingAccess;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Swagger\Annotations as SWG;
+use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -54,6 +56,24 @@ class ShowController extends AbstractRestController
         }
     }
 
+    /**
+     * Returns details of a show, given its slug
+     * 
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns details of a show",
+     *     @SWG\Schema(
+     *         type="array",
+     *         @SWG\Items(ref=@Model(type=Show::class, groups={"full"}))
+     *     )
+     * )
+     * @SWG\Parameter(
+     *     name="identifier",
+     *     in="path",
+     *     type="string",
+     *     description="The show's URL slug"
+     * )
+     */
     public function getAction($identifier)
     {
         $show = $this->getRepository()->findOneBySlug($identifier);
