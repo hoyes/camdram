@@ -30,7 +30,8 @@ jobs:
 
       - run: |
             cp app/config/parameters.travis.yml app/config/parameters.yml
-            echo "memory_limit = 512M" > /opt/circleci/php/$(phpenv global)/etc/conf.d/memory.ini
+            echo 'memory_limit=-1' | sudo tee -a /usr/local/etc/php/php.ini
+            sudo rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
       - run: composer install -n --prefer-dist
       - run: yarn install && yarn build
       - run: php app/console doctrine:schema:update --force
