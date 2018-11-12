@@ -13,6 +13,10 @@ jobs:
 
     working_directory: ~/repo
 
+    environment:
+      - SYMFONY_DEPRECATIONS_HELPER: weak_vendors
+      - SYMFONY_ENV: test
+
     steps:
       - checkout
 
