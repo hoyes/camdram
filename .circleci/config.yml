@@ -11,6 +11,9 @@ jobs:
             xpack.graph.enabled: false
             xpack.watcher.enabled: false
       - image: circleci/mariadb:10
+        environemt:
+            MYSQL_DATABASE: camdram_test
+            MYSQL_ALLOW_EMPTY_PASSWORD: yes
 
     working_directory: ~/repo
 
@@ -63,8 +66,6 @@ jobs:
       - run:
             name: MySQL migrations
             command: |
-                sudo apt install mysql-client
-                mysql -e 'CREATE DATABASE camdram_test;'
                 cp app/config/parameters.travis_mysql.yml app/config/parameters.yml
                 composer install -n --prefer-dist
                 SYMFONY_ENV=dev php app/console doctrine:migrations:migrate --no-interaction
