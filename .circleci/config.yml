@@ -29,8 +29,8 @@ jobs:
           - v1-dependencies-
 
       - run: |
-          cp app/config/parameters.travis.yml app/config/parameters.yml
-          echo "memory_limit = 512M" > /opt/circleci/php/$(phpenv global)/etc/conf.d/memory.ini
+            cp app/config/parameters.travis.yml app/config/parameters.yml
+            echo "memory_limit = 512M" > /opt/circleci/php/$(phpenv global)/etc/conf.d/memory.ini
       - run: composer install -n --prefer-dist
       - run: yarn install && yarn build
       - run: php app/console doctrine:schema:update --force
@@ -42,7 +42,7 @@ jobs:
         
       # run tests!
       - run: |
-        php app/console lint:yaml app/config
-        php app/console lint:twig app/Resources
-        php bin/simple-phpunit
-        php bin/behat
+            php app/console lint:yaml app/config
+            php app/console lint:twig app/Resources
+            php bin/simple-phpunit
+            php bin/behat
