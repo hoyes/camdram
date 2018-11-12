@@ -26,7 +26,8 @@ jobs:
       - run: cp app/config/parameters.travis.yml app/config/parameters.yml
       - run: composer install -n --prefer-dist
       - run: yarn install && yarn build
-
+      - run: php app/console doctrine:schema:update --force
+  
       - save_cache:
           paths:
             - ./vendor
