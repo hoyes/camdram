@@ -11,7 +11,7 @@ jobs:
             xpack.graph.enabled: false
             xpack.watcher.enabled: false
       - image: circleci/mariadb:10
-        environemt:
+        environment:
             MYSQL_DATABASE: camdram_test
             MYSQL_ALLOW_EMPTY_PASSWORD: yes
 
