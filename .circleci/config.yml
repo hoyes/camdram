@@ -28,13 +28,15 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
-      - run: |
-            cp app/config/parameters.travis.yml app/config/parameters.yml
-            echo 'memory_limit=-1' | sudo tee -a /usr/local/etc/php/php.ini
-            sudo rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - run:
+            name: System setup
+            Command: |
+                cp app/config/parameters.travis.yml app/config/parameters.yml
+                echo 'memory_limit=-1' | sudo tee -a /usr/local/etc/php/php.ini
+                sudo rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+  
       - run: composer install -n --prefer-dist
       - run: yarn install && yarn build
-      - run: php app/console doctrine:schema:update --force
   
       - save_cache:
           paths:
@@ -43,19 +45,26 @@ jobs:
           key: v1-dependencies-{{ checksum "composer.json" }}-{{ checksum "package.json" }}
         
       # run tests!
-      - run: |
-            php app/console lint:yaml app/config
-            php app/console lint:twig app/Resources
-            php bin/simple-phpunit
-            php bin/behat
+      - run: 
+            name: Run Tests
+            command: |
+                php app/console doctrine:schema:update --force
+                php app/console lint:yaml app/config
+                php app/console lint:twig app/Resources
+                php bin/simple-phpunit
+                php bin/behat
       
-      - run: |
-            php app/console camdram:database:refresh
-            php app/console fos:elastica:populate
+      - run: 
+            name: Test Fixtures and Elasticsearch population
+            command: |
+                php app/console camdram:database:refresh
+                php app/console fos:elastica:populate
 
-      - run: |
-            mysql -e 'CREATE DATABASE camdram_test;'
-            cp app/config/parameters.travis_mysql.yml app/config/parameters.yml
-            composer install -n --prefer-dist
-            SYMFONY_ENV=dev php app/console doctrine:migrations:migrate --no-interaction
-            SYMFONY_ENV=dev php app/console doctrine:fixtures:load --no-interaction
+      - run:
+            name: MySQL migrations
+            command: |
+                sudo apt install mysql-client
+                mysql -e 'CREATE DATABASE camdram_test;'
+                cp app/config/parameters.travis_mysql.yml app/config/parameters.yml
+                composer install -n --prefer-dist
+                SYMFONY_ENV=dev php app/console doctrine:migrations:migrate --no-interaction
