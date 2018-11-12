@@ -28,7 +28,9 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
-      - run: cp app/config/parameters.travis.yml app/config/parameters.yml
+      - run: |
+          cp app/config/parameters.travis.yml app/config/parameters.yml
+          echo "memory_limit = 512M" > /opt/circleci/php/$(phpenv global)/etc/conf.d/memory.ini
       - run: composer install -n --prefer-dist
       - run: yarn install && yarn build
       - run: php app/console doctrine:schema:update --force
@@ -39,8 +41,8 @@ jobs:
           key: v1-dependencies-{{ checksum "composer.json" }}
         
       # run tests!
-      - run: php app/console lint:yaml app/config
-      - run: php app/console lint:twig app/Resources
-      - run: php app/console doctrine:schema:update --force
-      - run: php bin/simple-phpunit
-      - run: php bin/behat
+      - run: |
+        php app/console lint:yaml app/config
+        php app/console lint:twig app/Resources
+        php bin/simple-phpunit
+        php bin/behat
