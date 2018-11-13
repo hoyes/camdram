@@ -99,6 +99,7 @@ jobs:
                 SYMFONY_ENV=dev php app/console doctrine:migrations:migrate --no-interaction
 
 workflows:
+  version: 2
   test-deploy:
     jobs:
       - run_tests
