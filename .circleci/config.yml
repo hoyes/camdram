@@ -1,7 +1,7 @@
 version: 2
 
 commands:
-    system_steup:
+    system_setup:
         description: System setup
         steps:
             run: |
@@ -94,7 +94,7 @@ jobs:
 
 workflows:
   version: 2
-  test-deploy:
+  test_deploy:
     jobs:
       - run_tests
       - validate_migrations
