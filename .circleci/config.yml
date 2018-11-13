@@ -1,6 +1,20 @@
 version: 2
+
+commands:
+    system_steup:
+        name: System setup
+        command: |
+            cp app/config/parameters.travis.yml app/config/parameters.yml
+            echo 'memory_limit=-1' | sudo tee -a /usr/local/etc/php/php.ini
+            sudo rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+    install_deps:
+        name: Install Dependencies
+        command: |
+            composer install -n --prefer-dist
+            yarn install && yarn build
+
 jobs:
-  build:
+  tests:
     docker:
       - image: circleci/php:7.0-node
       - image: docker.elastic.co/elasticsearch/elasticsearch:5.6.13
@@ -10,10 +24,6 @@ jobs:
             xpack.ml.enabled: false
             xpack.graph.enabled: false
             xpack.watcher.enabled: false
-      - image: circleci/mariadb:10
-        environment:
-            MYSQL_DATABASE: camdram_test
-            MYSQL_ALLOW_EMPTY_PASSWORD: yes
 
     working_directory: ~/repo
 
@@ -31,15 +41,8 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
-      - run:
-            name: System setup
-            Command: |
-                cp app/config/parameters.travis.yml app/config/parameters.yml
-                echo 'memory_limit=-1' | sudo tee -a /usr/local/etc/php/php.ini
-                sudo rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-  
-      - run: composer install -n --prefer-dist
-      - run: yarn install && yarn build
+      - system_setup
+      - install_deps
   
       - save_cache:
           paths:
@@ -58,12 +61,36 @@ jobs:
                 php bin/behat
       
       - run: 
-            name: Test Fixtures and Elasticsearch population
+            name: Test fixtures and search index population
             command: |
                 php app/console camdram:database:refresh
                 php app/console fos:elastica:populate
 
-      - run:
+  migrations:
+    docker:
+      - image: circleci/php:7.0-node
+      - image: circleci/mariadb:10
+        environment:
+            MYSQL_DATABASE: camdram_test
+            MYSQL_ALLOW_EMPTY_PASSWORD: yes
+
+    working_directory: ~/repo
+
+    environment:
+        SYMFONY_DEPRECATIONS_HELPER: weak_vendors
+        SYMFONY_ENV: dev
+
+    steps:
+        - checkout
+        - restore_cache:
+            keys:
+            - v1-dependencies-{{ checksum "composer.json" }}-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+        - system_setup
+        - install_deps
+        - run:
             name: MySQL migrations
             command: |
                 sudo docker-php-ext-install pdo_mysql
