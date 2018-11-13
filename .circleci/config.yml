@@ -14,7 +14,7 @@ commands:
             yarn install && yarn build
 
 jobs:
-  tests:
+  run_tests:
     docker:
       - image: circleci/php:7.0-node
       - image: docker.elastic.co/elasticsearch/elasticsearch:5.6.13
@@ -66,7 +66,7 @@ jobs:
                 php app/console camdram:database:refresh
                 php app/console fos:elastica:populate
 
-  migrations:
+  validate_migrations:
     docker:
       - image: circleci/php:7.0-node
       - image: circleci/mariadb:10
@@ -97,3 +97,9 @@ jobs:
                 cp app/config/parameters.travis_mysql.yml app/config/parameters.yml
                 composer install -n --prefer-dist
                 SYMFONY_ENV=dev php app/console doctrine:migrations:migrate --no-interaction
+
+workflows:
+  test-deploy:
+    jobs:
+      - run_tests
+      - validate_migrations
