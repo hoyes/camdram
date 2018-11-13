@@ -2,16 +2,29 @@ version: 2
 
 commands:
     system_steup:
-        name: System setup
-        command: |
-            cp app/config/parameters.travis.yml app/config/parameters.yml
-            echo 'memory_limit=-1' | sudo tee -a /usr/local/etc/php/php.ini
-            sudo rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+        description: System setup
+        steps:
+            run: |
+              cp app/config/parameters.travis.yml app/config/parameters.yml
+              echo 'memory_limit=-1' | sudo tee -a /usr/local/etc/php/php.ini
+              sudo rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
     install_deps:
-        name: Install Dependencies
-        command: |
-            composer install -n --prefer-dist
-            yarn install && yarn build
+        description: Install Dependencies
+        steps:
+            - restore_cache:
+                  keys:
+                      - v1-dependencies-{{ checksum "composer.json" }}-{{ checksum "package.json" }}
+                      # fallback to using the latest cache if no exact match is found
+                      - v1-dependencies-
+            - run: |
+                  composer install -n --prefer-dist
+                  yarn install && yarn build
+            - save_cache:
+                paths:
+                  - ./vendor
+                  - ./node_modules
+                key: v1-dependencies-{{ checksum "composer.json" }}-{{ checksum "package.json" }}
 
 jobs:
   run_tests:
@@ -33,22 +46,8 @@ jobs:
 
     steps:
       - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "composer.json" }}-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
-
       - system_setup
       - install_deps
-  
-      - save_cache:
-          paths:
-            - ./vendor
-            - ./node_modules
-          key: v1-dependencies-{{ checksum "composer.json" }}-{{ checksum "package.json" }}
         
       # run tests!
       - run: 
@@ -82,14 +81,9 @@ jobs:
 
     steps:
         - checkout
-        - restore_cache:
-            keys:
-            - v1-dependencies-{{ checksum "composer.json" }}-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-
         - system_setup
         - install_deps
+  
         - run:
             name: MySQL migrations
             command: |
