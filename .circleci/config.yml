@@ -4,10 +4,10 @@ commands:
     system_setup:
         description: System setup
         steps:
-            run: |
-              cp app/config/parameters.travis.yml app/config/parameters.yml
-              echo 'memory_limit=-1' | sudo tee -a /usr/local/etc/php/php.ini
-              sudo rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+            - run: |
+                cp app/config/parameters.travis.yml app/config/parameters.yml
+                echo 'memory_limit=-1' | sudo tee -a /usr/local/etc/php/php.ini
+                sudo rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
     install_deps:
         description: Install Dependencies
@@ -21,10 +21,10 @@ commands:
                   composer install -n --prefer-dist
                   yarn install && yarn build
             - save_cache:
-                paths:
-                  - ./vendor
-                  - ./node_modules
-                key: v1-dependencies-{{ checksum "composer.json" }}-{{ checksum "package.json" }}
+                  paths:
+                    - ./vendor
+                    - ./node_modules
+                  key: v1-dependencies-{{ checksum "composer.json" }}-{{ checksum "package.json" }}
 
 jobs:
   run_tests:
@@ -46,8 +46,8 @@ jobs:
 
     steps:
       - checkout
-      - system_setup: ~
-      - install_deps: ~
+      - system_setup
+      - install_deps
         
       # run tests!
       - run: 
@@ -81,8 +81,8 @@ jobs:
 
     steps:
         - checkout
-        - system_setup: ~
-        - install_deps: ~
+        - system_setup
+        - install_deps
   
         - run:
             name: MySQL migrations
