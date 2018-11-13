@@ -66,6 +66,7 @@ jobs:
       - run:
             name: MySQL migrations
             command: |
+                sudo docker-php-ext-install pdo_mysql
                 cp app/config/parameters.travis_mysql.yml app/config/parameters.yml
                 composer install -n --prefer-dist
                 SYMFONY_ENV=dev php app/console doctrine:migrations:migrate --no-interaction
