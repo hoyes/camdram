@@ -46,8 +46,8 @@ jobs:
 
     steps:
       - checkout
-      - system_setup
-      - install_deps
+      - system_setup: ~
+      - install_deps: ~
         
       # run tests!
       - run: 
@@ -81,8 +81,8 @@ jobs:
 
     steps:
         - checkout
-        - system_setup
-        - install_deps
+        - system_setup: ~
+        - install_deps: ~
   
         - run:
             name: MySQL migrations
